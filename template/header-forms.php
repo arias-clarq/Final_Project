@@ -1,5 +1,8 @@
 <?php
     include '../../config/db_conn.php';
+    if(!$_SESSION['login_session']){
+        header('location: ../../index.php');
+    }
 ?>
 <!DOCTYPE HTML>
 <html>

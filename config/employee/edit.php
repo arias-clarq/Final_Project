@@ -2,6 +2,8 @@
 session_start();
 include '../db_conn.php';
 
+$id = isset($_POST['id']) ? $_POST['id'] : $_SESSION['login_id'];
+
 $username = $conn->real_escape_string($_POST['username']);
 $password = $conn->real_escape_string($_POST['password']);
 $login_role_id = $conn->real_escape_string($_POST['login_role_id']);
@@ -41,53 +43,55 @@ $jhs = $conn->real_escape_string($_POST['jhs']);
 $shs = $conn->real_escape_string($_POST['shs']);
 $college = $conn->real_escape_string($_POST['college']);
 
-
-$sql = "INSERT 
-INTO `tbl_employee_account`(`username`, `password`, `login_role_id`) 
-VALUES ('$username','$password','$login_role_id')";
-
+$sql = "UPDATE `tbl_employee_account` SET `username`='$username',`password`='$password',`login_role_id`='$login_role_id' WHERE `employee_id` = $id";
 $result = $conn->query($sql);
-$id = $conn->insert_id;
-
-if(!$result){
-    echo 'Failed to create account' . $conn->error;
+if (!$result) {
+    echo 'Failed to update account' . $conn->error;
 }
 
-$sql = "INSERT INTO `tbl_bill`(`bill_id`, `sss`, `phil`, `pagibig`, `salary`) 
-VALUES ('$id','$sss','$phil','$pagibig','$salary')";
-
+$sql = "UPDATE `tbl_bill` SET `sss`='$sss',`phil`='$phil',`pagibig`='$pagibig',`salary`='$salary' WHERE `bill_id` = $id";
 $result = $conn->query($sql);
-
-if(!$result){
-    echo 'Failed to create account bill' . $conn->error;
+if (!$result) {
+    echo 'Failed to update account bill' . $conn->error;
 }
 
-$sql = "INSERT INTO `tbl_job`(`job_id`, `job_title`, `employement_num`, `department`, `hire_date`, `hire_status`) 
-VALUES ('$id','$job_title','$employement_num','$department','$hire_date','$employment_status')";
-
+$sql = "UPDATE `tbl_job` SET `job_title`='$job_title',`employement_num`='$employement_num',`department`='$department',`hire_date`='$hire_date',`hire_status`='$employment_status' WHERE `job_id` = $id";
 $result = $conn->query($sql);
-
-if(!$result){
-    echo 'Failed to create account job' . $conn->error;
+if (!$result) {
+    echo 'Failed to update account job' . $conn->error;
 }
 
-$sql = "INSERT INTO `tbl_relation`(`relation_id`, `person_name`, `relationship`, `person_num`, `person_email`) 
-VALUES ('$id','$person_name','$person_relationship','$person_phone_num','$person_email')";
-
+$sql = "UPDATE `tbl_relation` SET `person_name`='$person_name',`relationship`='$person_relationship',`person_num`='$person_phone_num ',`person_email`='$person_email' WHERE `relation_id` = $id";
 $result = $conn->query($sql);
-
-if(!$result){
-    echo 'Failed to create account relation' . $conn->error;
+if (!$result) {
+    echo 'Failed to update account relation' . $conn->error;
 }
 
-$sql = "INSERT 
-INTO `tbl_employee_info`(`employee_info_id`, `employee_id`, `relation_id`, `job_id`, `bill_id`, `firstname`, `middlename`, `lastname`, `birthdate`, `gender`, `age`, `marital_status`, `email`, `phone_num`, `province`, `municipality`, `elem`, `jhs`, `shs`, `college`) 
-VALUES ('$id','$id','$id','$id','$id','$fname','$mname','$lname','$bday','$gender','$age','$marital_status','$email','$phone','$province','$municipality','$elem','$jhs','$shs','$college')";
+$sql = "UPDATE `tbl_employee_info` 
+SET `firstname`='$fname',
+`middlename`='$mname',
+`lastname`='$lname',
+`birthdate`='$bday',
+`gender`='$gender',
+`age`='$age',
+`marital_status`='$marital_status',
+`email`='$email',
+`phone_num`='$phone',
+`province`='$province',
+`municipality`='$municipality',
+`elem`='$elem',
+`jhs`='$jhs',
+`shs`='$shs',
+`college`='$college' WHERE `employee_id` = $id";
 $result = $conn->query($sql);
-
-if(!$result){
-    echo 'Failed to create account info' . $conn->error;
-}else{
-    $_SESSION['confirm_msg'] = "Successfuly Add New User";
-    header('location: ../../dashboard/employee_mgt.php');
+if (!$result) {
+    echo 'Failed to update account info' . $conn->error;
+} else {
+    if ($_SESSION['login_role'] == 1) {
+        $_SESSION['confirm_msg'] = "Successfuly Update User";
+        header('location: ../../dashboard/employee_mgt.php');
+    } else {
+        $_SESSION['confirm_msg'] = "Successfuly Update Information";
+        header('location: ../../dashboard/dashboard.php');
+    }
 }

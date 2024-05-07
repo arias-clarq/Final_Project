@@ -45,7 +45,8 @@ include '../template/header.php';
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "SELECT * FROM `tbl_employee_account` INNER JOIN tbl_login_role ON tbl_employee_account.login_role_id = tbl_login_role.login_role_id";
+                    $admin_id = $_SESSION['login_id'];
+                    $sql = "SELECT * FROM `tbl_employee_account` INNER JOIN tbl_login_role ON tbl_employee_account.login_role_id = tbl_login_role.login_role_id WHERE `employee_id` != $admin_id";
                     $result = $conn->query($sql);
                     $count = 0;
                     while ($row = $result->fetch_assoc()) {
@@ -57,14 +58,16 @@ include '../template/header.php';
                             <td>********</td>
                             <td>
 
-                                <form action="" method="post">
-                                    <a href="#" type="button" class="btn btn-warning"><i class="fa fa-eye"
-                                            aria-hidden="true"></i> View</a>
+                                <form action="../template/view_forms/employee.php" method="post">
+                                    <input type="hidden" name="id" value="<?= $row['employee_id'] ?>">
+                                    <button type="submit" class="btn btn-warning"><i class="fa fa-eye"
+                                            aria-hidden="true"></i> View</button>
                                 </form>
 
-                                <form action="" method="post">
-                                    <a href="#" type="button" class="btn btn-info"><i class="fa fa-pencil"
-                                            aria-hidden="true"></i> Edit</a>
+                                <form action="../template/edit_forms/employee.php" method="post">
+                                    <input type="hidden" name="id" value="<?= $row['employee_id'] ?>">
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-pencil"
+                                            aria-hidden="true"></i> Edit</button>
                                 </form>
 
                                 <form action="../template/delete_forms/employee.php" method="post">

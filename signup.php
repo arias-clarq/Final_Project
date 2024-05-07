@@ -113,53 +113,31 @@ $_SESSION['title'] = "Login Page";
 <body class="cbp-spmenu-push">
     <div class="main-content">
         <div id="page-wrapper">
-            <div class="main-page login-page">
-                <h2 class="title1">Login</h2>
-                <div class="widget-shadow">
-                    <div class="login-body">
-                        <!-- action msg here -->
-                        <?php
-                        if (isset($_SESSION['error_msg'])) {
-                            ?>
-                            <div class="alert alert-danger  alert-dismissible">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                <strong>
-                                    <?= $_SESSION['error_msg'] ?>
-                                </strong>
-                            </div>
-                            <?php
-                        } ?>
-                        <?php
-                        if (isset($_SESSION['success_msg'])) {
-                            ?>
-                            <div class="alert alert-success  alert-dismissible">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                <strong>
-                                    <?= $_SESSION['success_msg'] ?>
-                                </strong>
-                            </div>
-                            <?php
-                        } ?>
-                        <form action="config/login.php" method="post">
-                            <div class="mb-3 mt-3">
-                                <label for="">Enter Username/Email:</label>
-                                <input type="text" class="form-control" name="username" placeholder="      Username/Email" required>
-                            </div>
-                            <div class="mb-3 mt-3">
-                                <label for="">Enter Password:</label>
-                                <input type="password" class="form-control" name="password" placeholder="Password" required>
-                            </div>
-                            <input type="submit" name="Sign In" value="LogIn">
-                            <div class="registration">
-                                Don't have an account ?
-                                <a class="" href="signup.php">
-                                    Create an account
-                                </a>
-                            </div>
-                        </form>
-                    </div>
+            <div class="main-page signup-page">
+                <h2 class="title1">Register Here</h2>
+                <div class="sign-up-row widget-shadow">
+                    <form action="config/register.php" method="post">
+                        <h6>Login Information :</h6>
+                        <div class="sign-u">
+                            <input type="email" name="username" placeholder="Enter Email Address" required="">
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="sign-u">
+                            <input type="password" name="password" placeholder="Enter Password" required="">
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="sub_home">
+                            <input type="submit" value="Submit">
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="registration">
+                            Already Registered.
+                            <a class="" href="index.php ">
+                                Login
+                            </a>
+                        </div>
+                    </form>
                 </div>
-
             </div>
         </div>
     </div>

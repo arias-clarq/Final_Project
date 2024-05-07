@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION['title'] = "Add Employee Form";
+$_SESSION['title'] = "Edit Employee Form";
 include '../header-forms.php';
 
 $gender = [
@@ -47,12 +47,24 @@ $hire_status = [
     "seasonal employees",
     "temporary employees"
 ];
+
+
+$id = isset($_POST['id']) ? $_POST['id'] : $_SESSION['login_id'];
+$sql = "SELECT * FROM `tbl_employee_info` 
+INNER JOIN tbl_employee_account ON tbl_employee_info.employee_id = tbl_employee_account.employee_id
+INNER JOIN tbl_job ON tbl_employee_info.job_id = tbl_job.job_id 
+INNER JOIN tbl_relation ON tbl_employee_info.relation_id = tbl_relation.relation_id
+INNER JOIN tbl_bill ON tbl_employee_info.bill_id = tbl_bill.bill_id
+INNER JOIN tbl_login_role ON tbl_employee_account.login_role_id = tbl_login_role.login_role_id
+WHERE tbl_employee_info.employee_id = $id";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
 ?>
 
 <!-- main content start-->
 <div id="page-wrapper">
     <div class="main-page">
-        <form action="../../config/employee/add.php" method="post">
+        <form action="../../config/employee/edit.php" method="post">
             <!-- account -->
             <div class="forms">
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
@@ -62,14 +74,15 @@ $hire_status = [
                     <div class="form-body">
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" class="form-control" placeholder="Enter Username" name="username"
-                                required>
+                            <input type="text" value="<?= isset($row['username']) ? $row['username'] : "" ?>"
+                                class="form-control" placeholder="Enter Username" name="username">
                         </div>
                         <div class="form-group">
                             <label>Password</label>
                             <div class="input-group input-group input-icon right">
-                                <input type="password" class="form-control" placeholder="Enter Password" name="password"
-                                    id="passwordField" required>
+                                <input type="password" value="<?= isset($row['password']) ? $row['password'] : "" ?>"
+                                    class="form-control" placeholder="Enter Password" name="password"
+                                    id="passwordField">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary btn-sm" type="button" id="togglePassword">
                                         <i class="fa fa-eye"></i>
@@ -77,23 +90,30 @@ $hire_status = [
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">Role:</label>
-                            <select name="login_role_id" class="form-control" required>
-                                <option selected disabled>Select an option</option>
-                                <?php
-                                $sql = "SELECT * FROM `tbl_login_role` WHERE `login_role_id` != 3";
-                                $result = $conn->query($sql);
-                                while ($row = $result->fetch_assoc()) {
-                                    ?>
-                                    <option value="<?= $row['login_role_id'] ?>" class="text-capitalize">
-                                        <?= $row['login_role'] ?>
-                                    </option>
+                        <?php
+                        if ($_SESSION['login_role'] == 1) {
+                            ?>
+                            <div class="form-group">
+                                <label class="control-label">Role:</label>
+                                <select name="login_role_id" class="form-control">
+                                    <option selected disabled>Select an option</option>
                                     <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
+                                    $sql = "SELECT * FROM `tbl_login_role` WHERE `login_role_id` != 3";
+                                    $result = $conn->query($sql);
+                                    while ($row2 = $result->fetch_assoc()) {
+                                        ?>
+                                        <option value="<?= $row2['login_role_id'] ?>" class="text-capitalize"
+                                            <?= ($row2['login_role_id'] == $row['login_role_id']) ? "selected" : "" ?>>
+                                            <?= $row2['login_role'] ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -107,30 +127,34 @@ $hire_status = [
                     <div class="form-body">
                         <div class="input-group mb-3 mt-3">
                             <span class="input-group-text fw-bold">Name</span>
-                            <input type="text" class="form-control" placeholder="Last Name" name="lname" required>
-                            <input type="text" class="form-control" placeholder="First Name" name="fname" required>
-                            <input type="text" class="form-control" placeholder="Middle Name" name="mname" required>
+                            <input type="text" value="<?= isset($row['lastname']) ? $row['lastname'] : "" ?>"
+                                class="form-control" placeholder="Last Name" name="lname">
+                            <input type="text" value="<?= isset($row['firstname']) ? $row['firstname'] : "" ?>"
+                                class="form-control" placeholder="First Name" name="fname">
+                            <input type="text" value="<?= isset($row['middlename']) ? $row['middlename'] : "" ?>"
+                                class="form-control" placeholder="Middle Name" name="mname">
                         </div>
 
                         <div class="input-group mb-3 mt-3">
                             <span class="input-group-text fw-bold">Age</span>
-                            <input class="form-control" min="0" placeholder="Enter Age" type="number" name="age"
-                                required>
+                            <input value="<?= isset($row['age']) ? $row['age'] : "" ?>" class="form-control" min="0"
+                                placeholder="Enter Age" type="number" name="age">
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold">Birthday</span>
-                            <input class="form-control" type="date" name="bday" required>
+                            <input value="<?= isset($row['birthdate']) ? $row['birthdate'] : "" ?>" class="form-control"
+                                type="date" name="bday">
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold">Gender</span>
-                            <select name="gender" class="form-select" required>
+                            <select name="gender" class="form-select">
                                 <option selected disabled>Select Gender</option>
                                 <?php
                                 foreach ($gender as $gender) {
                                     ?>
-                                    <option value="<?= $gender ?>" class="text-capitalize"><?= $gender ?></option>
+                                    <option value="<?= $gender ?>" class="text-capitalize" <?= ($gender == $row['gender']) ? "selected" : "" ?>><?= $gender ?></option>
                                     <?php
                                 }
                                 ?>
@@ -139,12 +163,14 @@ $hire_status = [
 
                         <div class="input-group mb-3">
                             <span class="input-group-text fw-bold">Marital Status</span>
-                            <select name="marital_status" class="form-select" required>
+                            <select name="marital_status" class="form-select">
                                 <option selected disabled>Select Option</option>
                                 <?php
                                 foreach ($marital_status as $marital_status) {
                                     ?>
-                                    <option value="<?= $marital_status ?>" class="text-capitalize"><?= $marital_status ?>
+                                    <option value="<?= $marital_status ?>" class="text-capitalize"
+                                        <?= ($marital_status == $row['marital_status']) ? "selected" : "" ?>>
+                                        <?= $marital_status ?>
                                     </option>
                                     <?php
                                 }
@@ -164,13 +190,14 @@ $hire_status = [
                     <div class="form-body">
                         <div class="input-group mb-3 mt-3">
                             <span class="input-group-text fw-bold">Email</span>
-                            <input class="form-control" placeholder="Enter Email" type="email" name="email" required>
+                            <input value="<?= isset($row['email']) ? $row['email'] : "" ?>" class="form-control"
+                                placeholder="Enter Email" type="email" name="email" required>
                         </div>
 
                         <div class="input-group mb-3 mt-3">
                             <span class="input-group-text fw-bold">Phone no.</span>
-                            <input class="form-control" maxlength="11" placeholder="Enter Phone Number" type="phone"
-                                name="phone" required>
+                            <input value="<?= isset($row['phone_num']) ? $row['phone_num'] : "" ?>" class="form-control"
+                                maxlength="11" placeholder="Enter Phone Number" type="phone" name="phone" required>
                         </div>
                     </div>
                 </div>
@@ -193,7 +220,7 @@ $hire_status = [
                                 <label class="form-label fw-bold">Select Region:</label>
                                 <select name="region" id="regionSelect" class="form-select" required
                                     onchange="populateProvinces()">
-                                    <option value="">Select Region</option>
+                                    <option disabled selected>Select Region</option>
                                     <?php
                                     foreach ($data as $region) {
                                         ?>
@@ -233,12 +260,14 @@ $hire_status = [
                         <div class="mb-3 mt-3">
                             <div class="input-group">
                                 <span class="input-group-text fw-bold">School</span>
-                                <input type="text" class="form-control" placeholder="Enter Elementary" name="elem">
-                                <input type="text" class="form-control" placeholder="Enter Junior Highschool"
-                                    name="jhs">
-                                <input type="text" class="form-control" placeholder="Enter Senior Highschool"
-                                    name="shs">
-                                <input type="text" class="form-control" placeholder="Enter College" name="college">
+                                <input value="<?= isset($row['elem']) ? $row['elem'] : "" ?>" type="text"
+                                    class="form-control" placeholder="Enter Elementary" name="elem">
+                                <input value="<?= isset($row['jhs']) ? $row['jhs'] : "" ?>" type="text"
+                                    class="form-control" placeholder="Enter Junior Highschool" name="jhs">
+                                <input value="<?= isset($row['shs']) ? $row['shs'] : "" ?>" type="text"
+                                    class="form-control" placeholder="Enter Senior Highschool" name="shs">
+                                <input value="<?= isset($row['college']) ? $row['college'] : "" ?>" type="text"
+                                    class="form-control" placeholder="Enter College" name="college">
                             </div>
                         </div>
                     </div>
@@ -261,7 +290,7 @@ $hire_status = [
                                     <?php
                                     foreach ($job as $job) {
                                         ?>
-                                        <option value="<?= $job ?>" class="text-capitalize"><?= $job ?></option>
+                                        <option value="<?= $job ?>" class="text-capitalize" <?= ($job == $row['job_title']) ? "selected" : "" ?>><?= $job ?></option>
                                         <?php
                                     }
                                     ?>
@@ -276,7 +305,9 @@ $hire_status = [
                                     <?php
                                     foreach ($department as $department) {
                                         ?>
-                                        <option value="<?= $department ?>" class="text-capitalize"><?= $department ?></option>
+                                        <option value="<?= $department ?>" class="text-capitalize"
+                                            <?= ($department == $row['department']) ? "selected" : "" ?>><?= $department ?>
+                                        </option>
                                         <?php
                                     }
                                     ?>
@@ -290,7 +321,9 @@ $hire_status = [
                                     <?php
                                     foreach ($hire_status as $hire_status) {
                                         ?>
-                                        <option value="<?= $hire_status ?>" class="text-capitalize"><?= $hire_status ?></option>
+                                        <option value="<?= $hire_status ?>" class="text-capitalize"
+                                            <?= ($hire_status == $row['hire_status']) ? "selected" : "" ?>><?= $hire_status ?>
+                                        </option>
                                         <?php
                                     }
                                     ?>
@@ -300,7 +333,8 @@ $hire_status = [
                             <div class="col d-flex align-items-center justify-content-center">
                                 <div class="input-group" style="height: 1.4rem;">
                                     <span class="input-group-text fw-bold">Employee Id Number</span>
-                                    <input type="text" class="form-control" placeholder="Enter Employee Id Number"
+                                    <input value="<?= isset($row['employement_num']) ? $row['employement_num'] : "" ?>"
+                                        type="text" class="form-control" placeholder="Enter Employee Id Number"
                                         name="employement_num" required>
                                 </div>
                             </div>
@@ -308,7 +342,8 @@ $hire_status = [
                             <div class="col d-flex align-items-center justify-content-center">
                                 <div class="input-group" style="height: 1.4rem;">
                                     <span class="input-group-text fw-bold">Date of Hire</span>
-                                    <input type="date" class="form-control" name="hire_date" required>
+                                    <input value="<?= isset($row['hire_date']) ? $row['hire_date'] : "" ?>" type="date"
+                                        class="form-control" name="hire_date" required>
                                 </div>
                             </div>
 
@@ -326,16 +361,17 @@ $hire_status = [
                     <div class="form-body">
                         <div class="input-group mb-3 mt-3">
                             <span class="input-group-text fw-bold">SSS Number</span>
-                            <input type="text" class="form-control" placeholder="Enter SSS number" name="sss">
+                            <input value="<?= isset($row['sss']) ? $row['sss'] : "" ?>" type="text" class="form-control"
+                                placeholder="Enter SSS number" name="sss">
                             <span class="input-group-text fw-bold">Pag-Ibig Number</span>
-                            <input type="text" class="form-control" placeholder="Enter Pag-Ibig Number" name="pagibig"
-                            >
+                            <input value="<?= isset($row['pagibig']) ? $row['pagibig'] : "" ?>" type="text"
+                                class="form-control" placeholder="Enter Pag-Ibig Number" name="pagibig">
                             <span class="input-group-text fw-bold">PhilHealth Number</span>
-                            <input type="text" class="form-control" placeholder="Enter PhilHealth Number" name="phil"
-                            >
+                            <input value="<?= isset($row['phil']) ? $row['phil'] : "" ?>" type="text"
+                                class="form-control" placeholder="Enter PhilHealth Number" name="phil">
                             <span class="input-group-text fw-bold">Basic Salary</span>
-                            <input type="number" class="form-control" placeholder="Enter Basic Salary" name="salary"
-                                required>
+                            <input value="<?= isset($row['salary']) ? $row['salary'] : "" ?>" type="number"
+                                class="form-control" placeholder="Enter Basic Salary" name="salary" required>
                         </div>
                     </div>
                 </div>
@@ -351,28 +387,32 @@ $hire_status = [
                         <div class="row row-col-2 input-group mb-3 mt-3">
                             <div class="col input-group">
                                 <span class="input-group-text fw-bold">Name of Spouse/Guardian</span>
-                                <input type="text" class="form-control" placeholder="Enter Name of Spouse/Guardian"
-                                    name="person_name" required>
+                                <input value="<?= isset($row['person_name']) ? $row['person_name'] : "" ?>" type="text"
+                                    class="form-control" placeholder="Enter Name of Spouse/Guardian" name="person_name">
                             </div>
                             <div class="col input-group">
                                 <span class="input-group-text fw-bold">Relationship</span>
-                                <input type="text" class="form-control" placeholder="Enter Relationship"
-                                    name="person_relationship" required>
+                                <input value="<?= isset($row['relationship']) ? $row['relationship'] : "" ?>"
+                                    type="text" class="form-control" placeholder="Enter Relationship"
+                                    name="person_relationship">
                             </div>
                         </div>
                         <div class="row row-col-2 input-group mb-3 mt-3">
                             <div class="col input-group">
                                 <span class="input-group-text fw-bold">Spouse/Guardian Phone Number</span>
-                                <input type="number" class="form-control"
-                                    placeholder="Enter Spouse/Guardian Phone Number" name="person_phone_num" required>
+                                <input value="<?= isset($row['person_num']) ? $row['person_num'] : "" ?>" type="number"
+                                    class="form-control" placeholder="Enter Spouse/Guardian Phone Number"
+                                    name="person_phone_num">
                             </div>
                             <div class="col input-group">
                                 <span class="input-group-text fw-bold">Spouse/Guardian Email</span>
-                                <input type="email" class="form-control" placeholder="Enter Spouse/Guardian Email"
-                                    name="person_email" required>
+                                <input value="<?= isset($row['person_email']) ? $row['person_email'] : "" ?>"
+                                    type="email" class="form-control" placeholder="Enter Spouse/Guardian Email"
+                                    name="person_email">
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
+                            <input type="hidden" name="id" value="<?= $id ?>">
                             <button type="submit" class="btn btn-default">Submit</button>
                         </div>
                     </div>
@@ -448,4 +488,5 @@ $hire_status = [
         });
     });
 </script>
+
 <?php include '../footer.php'; ?>

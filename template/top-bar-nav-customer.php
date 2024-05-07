@@ -21,12 +21,12 @@
                                 <?php
                                 $user_id = $_SESSION['login_id'];
 
-                                $user_sql = "SELECT * FROM `tbl_employee_account` 
-                                INNER JOIN tbl_employee_info ON tbl_employee_account.employee_id = tbl_employee_info.employee_id
-                                INNER JOIN tbl_login_role ON tbl_employee_account.login_role_id = tbl_login_role.login_role_id 
-                                WHERE `tbl_employee_account`.`employee_id` = $user_id";
+                                $user_sql = "SELECT * FROM `tbl_customer_account` 
+                                INNER JOIN tbl_customer_info ON tbl_customer_account.customer_id = tbl_customer_info.customer_id
+                                INNER JOIN tbl_login_role ON tbl_customer_account.login_role_id = tbl_login_role.login_role_id 
+                                WHERE `tbl_customer_account`.`customer_id` = $user_id";
                                 $user_res = $conn->query($user_sql);
-
+                                
                                 if ($user_res->num_rows > 0) {
                                     $user_row = $user_res->fetch_assoc();
                                 }
@@ -34,7 +34,6 @@
                                 <p class="text-capitalize">
                                     <?= $user_row['lastname'] . ',' . $user_row['firstname'] ?>
                                 </p>
-                                <span class="text-capitalize"><?= $user_row['login_role'] ?></span>
                             </div>
                             <i class="fa fa-angle-down lnr"></i>
                             <i class="fa fa-angle-up lnr"></i>
@@ -42,7 +41,7 @@
                         </div>
                     </a>
                     <ul class="dropdown-menu">
-                        <li> <a href="../template/edit_forms/employee.php"><i class="fa fa-user"></i> My Account</a>
+                        <li> <a href="../template/edit_forms/customer.php"><i class="fa fa-user"></i> My Account</a>
                         </li>
                         <li> <a href="../index.php"><i class="fa fa-sign-out"></i> Logout</a> </li>
                     </ul>

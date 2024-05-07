@@ -101,11 +101,6 @@
                         <li><a href="blank-page.html"><i class="fa fa-angle-right"></i> Blank Page</a></li>
                     </ul>
                 </li>
-                <li class="header">LABELS</li>
-                <li><a href="#"><i class="fa fa-angle-right text-red"></i> <span>Important</span></a></li>
-                <li><a href="#"><i class="fa fa-angle-right text-yellow"></i> <span>Warning</span></a></li>
-                <li><a href="#"><i class="fa fa-angle-right text-aqua"></i> <span>Information</span></a>
-                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

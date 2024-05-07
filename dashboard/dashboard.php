@@ -7,6 +7,21 @@ include '../template/header.php';
 <!-- main content start-->
 <div id="page-wrapper">
 	<div class="main-page mt-5">
+		<!-- action msg here -->
+        <?php
+        if (isset($_SESSION['confirm_msg'])) {
+            ?>
+            <div class="alert alert-success  alert-dismissible">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>
+                    <?= $_SESSION['confirm_msg'] ?>
+                </strong>
+            </div>
+            <?php
+        } 
+        unset($_SESSION['confirm_msg']);
+        ?>
+		
 		<div class="col_3">
 			<div class="col-md-3 widget widget1">
 				<div class="r3_counter_box">

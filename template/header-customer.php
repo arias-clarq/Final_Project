@@ -123,9 +123,9 @@
     <div class="main-content">
         <div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
             <!--left-fixed -navigation-->
-            <?php include 'left-side-nav.php'; ?>
+            <?php include 'left-side-nav-customer.php'; ?>
         </div>
 
         <!-- top-bar-nav-starts -->
-        <?php include 'top-bar-nav.php'; ?>
+        <?php include 'top-bar-nav-customer.php'; ?>
         <!-- //top-bar-nav-ends -->

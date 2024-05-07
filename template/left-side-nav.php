@@ -19,6 +19,7 @@
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
+                <?php if($_SESSION['login_role'] == 1) { ?>
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-users"></i>
@@ -30,6 +31,9 @@
                         <li><a href="customer_mgt.php"><i class="fa fa-angle-right"></i> Customer</a></li>
                     </ul>
                 </li>
+                <?php
+                    }
+                ?>
                 <li class="treeview">
                     <a href="charts.html">
                         <i class="fa fa-pie-chart"></i>
@@ -100,11 +104,6 @@
                         <li><a href="500.html"><i class="fa fa-angle-right"></i> 500 Error</a></li>
                         <li><a href="blank-page.html"><i class="fa fa-angle-right"></i> Blank Page</a></li>
                     </ul>
-                </li>
-                <li class="header">LABELS</li>
-                <li><a href="#"><i class="fa fa-angle-right text-red"></i> <span>Important</span></a></li>
-                <li><a href="#"><i class="fa fa-angle-right text-yellow"></i> <span>Warning</span></a></li>
-                <li><a href="#"><i class="fa fa-angle-right text-aqua"></i> <span>Information</span></a>
                 </li>
             </ul>
         </div>
